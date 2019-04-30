@@ -1,0 +1,9 @@
+[submodule "modules/common/base"]
+	path = modules/common/base
+	url = ../common-base
+[submodule "modules/common/user"]
+	path = modules/common/user
+	url = ../common-user
+[submodule "modules/utils/extension"]
+	path = modules/utils/extension
+	url = ../utils-extension

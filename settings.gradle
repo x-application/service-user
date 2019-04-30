@@ -1,0 +1,16 @@
+pluginManagement {
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+    }
+}
+rootProject.name = 'service-user'
+
+include 'common-base'
+include 'common-user'
+include 'utils-extension'
+
+project(':common-base').projectDir = new File(settingsDir, './modules/common/base')
+project(':common-user').projectDir = new File(settingsDir, './modules/common/user')
+project(':utils-extension').projectDir = new File(settingsDir, './modules/utils/extension')
