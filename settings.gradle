@@ -10,9 +10,11 @@ rootProject.name = 'service-user'
 include 'common-base'
 include 'common-account'
 include 'common-user'
+include 'common-dsl'
 include 'utils-extension'
 
 project(':common-base').projectDir = new File(settingsDir, './modules/common/base')
 project(':common-account').projectDir = new File(settingsDir, './modules/common/account')
 project(':common-user').projectDir = new File(settingsDir, './modules/common/user')
+project(':common-dsl').projectDir = new File(settingsDir, './modules/common/dsl')
 project(':utils-extension').projectDir = new File(settingsDir, './modules/utils/extension')

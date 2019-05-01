@@ -10,3 +10,6 @@
 [submodule "modules/common/account"]
 	path = modules/common/account
 	url = ../common-account
+[submodule "modules/common/dsl"]
+	path = modules/common/dsl
+	url = ../common-dsl

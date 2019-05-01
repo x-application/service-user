@@ -65,21 +65,4 @@ class UserTest {
                 .expectSuccessfulHandlerExecution()
     }
 
-    @Test
-    fun bcrypt() {
-        val bCrypt = BCrypt.with(BCrypt.Version.VERSION_2B)
-
-        val s = SecureRandom(userId.toByteArray())
-
-        val password = "password"
-
-        for (i in 0..100){
-            val result = bCrypt.hash(8, s.generateSeed(16), password.toByteArray())
-            println(String(result))
-            println(String(bCrypt.hash(8, password.toByteArray())))
-        }
-
-//        println(BCrypt.verifyer().verifyStrict(password.toByteArray(), result, BCrypt.Version.VERSION_2B))
-    }
-
 }
