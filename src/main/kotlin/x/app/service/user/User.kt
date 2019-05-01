@@ -6,6 +6,7 @@ import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.modelling.command.AggregateMember
 import org.axonframework.spring.stereotype.Aggregate
 import x.app.common.user.event.UserCreatedEvent
+import x.app.common.user.event.UserLoggedInEvent
 
 /**
  *   @Project: user
@@ -22,6 +23,12 @@ class User {
     @AggregateMember
     lateinit var userId: String
 
+    @AggregateMember
+    lateinit var password: String
+
+    @AggregateMember
+    lateinit var accounts: HashSet<String>
+
     constructor()
 
     constructor(userId: String, password: String, time: Long) {
@@ -32,6 +39,12 @@ class User {
     fun on(event: UserCreatedEvent) {
         this.id = event.getIdentifier()
         this.userId = event.userId
+        this.password = event.password
+        this.accounts = HashSet()
+    }
+
+    fun login(password: String, time: Long) {
+        AggregateLifecycle.apply(UserLoggedInEvent(userId = userId, time = time))
     }
 
 }

@@ -52,8 +52,12 @@ dependencies {
     implementation "org.reflections:reflections:0.9.11"
 
     implementation project(':common-base')
+    implementation project(':common-account')
     implementation project(':common-user')
     implementation project(':utils-extension')
+
+    // https://mvnrepository.com/artifact/at.favre.lib/bcrypt
+    implementation "at.favre.lib:bcrypt:0.8.0"
 
     testCompile "junit:junit:4.12"
     testCompile "org.axonframework:axon-test:${axonVersion}"
