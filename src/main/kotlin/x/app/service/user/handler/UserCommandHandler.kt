@@ -2,6 +2,7 @@ package x.app.service.user.handler
 
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.Repository
+import org.springframework.stereotype.Component
 import x.app.common.AbstractResult
 import x.app.common.CommonService
 import x.app.common.user.command.CreateUserCommand
@@ -14,6 +15,7 @@ import x.app.service.user.User
  *   @Author:  Iamee
  *   @Date:    2019-05-01 4:35
  */
+@Component
 class UserCommandHandler(
         val repository: Repository<User>,
         val service: CommonService
