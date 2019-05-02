@@ -1,22 +1,21 @@
 package x.app.service.user.test
 
-import at.favre.lib.crypto.bcrypt.BCrypt
-import at.favre.lib.crypto.bcrypt.LongPasswordStrategy
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway
 import org.axonframework.common.IdentifierFactory
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.junit.Before
 import org.junit.Test
 import x.app.common.CommonService
-import x.app.common.user.command.LoginUserCommand
+import x.app.common.account.exception.AccountAlreadyBondException
+import x.app.common.user.command.CreateUserCommand
 import x.app.common.user.event.UserCreatedEvent
 import x.app.service.user.User
+import x.app.service.user.extension.CreateUserExtension
 import x.app.service.user.extension.LoginUserExtension
 import x.app.service.user.handler.UserCommandHandler
 import x.app.service.user.interceptor.UserInterceptor
 import x.app.service.user.test.mock.MockAccountCommandHandler
 import x.app.utils.extension.IExtensionExecutor
-import java.security.SecureRandom
 import kotlin.reflect.KClass
 
 /**
@@ -38,6 +37,7 @@ class UserTest {
     @Before
     fun setup() {
         fixture = AggregateTestFixture(User::class.java)
+        val commandGateway = DefaultCommandGateway.builder().commandBus(fixture.commandBus).build()
         commandService = object : CommonService {
             override fun currentTimeMillis(): Long {
                 return 0L
@@ -50,19 +50,33 @@ class UserTest {
         executor = object : IExtensionExecutor {
             override val maps: HashMap<KClass<*>, Any> = HashMap()
         }
-        executor.add(LoginUserExtension(commandGateway = DefaultCommandGateway.builder().commandBus(fixture.commandBus).build()))
+        executor.add(LoginUserExtension(commandGateway = commandGateway))
+        executor.add(CreateUserExtension(commandGateway = commandGateway))
         fixture.registerAnnotatedCommandHandler(UserCommandHandler(repository = fixture.repository, service = commandService))
         fixture.registerAnnotatedCommandHandler(MockAccountCommandHandler())
         fixture.registerCommandHandlerInterceptor(UserInterceptor(repository = fixture.repository, executor = executor))
     }
 
     @Test
-    fun login() {
+    fun create() {
+        val accountId = "10001"
+        val accountType = "ac-type"
         val password = "password"
         fixture
-                .given(UserCreatedEvent(userId = userId, password = password, time = commandService.currentTimeMillis()))
-                .`when`(LoginUserCommand(userId = "", accountId = "foo", password = "password"))
+                .givenNoPriorActivity()
+                .`when`(CreateUserCommand(userId = userId, accountId = accountId, accountType = accountType, password = password))
                 .expectSuccessfulHandlerExecution()
+                .expectEvents(UserCreatedEvent(userId = userId, password = password, time = commandService.currentTimeMillis()))
     }
 
+    @Test
+    fun createWithAccountAlreadyBondException() {
+        val accountId = "10000"
+        val accountType = "ac-type"
+        val password = "password"
+        fixture
+                .givenNoPriorActivity()
+                .`when`(CreateUserCommand(userId = userId, accountId = accountId, accountType = accountType, password = password))
+                .expectException(AccountAlreadyBondException::class.java)
+    }
 }
