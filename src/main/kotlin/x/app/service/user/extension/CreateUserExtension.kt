@@ -2,6 +2,7 @@ package x.app.service.user.extension
 
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.modelling.command.Repository
+import x.app.common.account.command.BindAccountCommand
 import x.app.common.account.command.CreateAccountCommand
 import x.app.common.dsl.sendTo
 import x.app.common.user.command.CreateUserCommand
@@ -21,7 +22,7 @@ class CreateUserExtension(
 ) : ICommandExtensionPoint<CreateUserCommand, User> {
 
     override fun before(repository: Repository<User>, command: CreateUserCommand) {
-        CreateAccountCommand(accountId = command.accountId, accountType = command.accountType, userId = command.userId) sendTo commandGateway
+        BindAccountCommand(accountId = command.accountId, accountType = command.accountType, userId = command.userId) sendTo commandGateway
     }
 
 }
