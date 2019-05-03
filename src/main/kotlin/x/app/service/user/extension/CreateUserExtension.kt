@@ -28,10 +28,10 @@ class CreateUserExtension(
         } catch (ex: AccountAlreadExistsException) {
             //如果账户已存在过滤不抛出异常
         } catch (ex: Throwable) {
+            println("========")
             throw ex
-        } finally {
-            CreateAccountBondCommand(accountId = command.accountId, userId = command.userId, accountType = command.accountType) sendTo commandGateway
         }
+        CreateAccountBondCommand(accountId = command.accountId, userId = command.userId, accountType = command.accountType) sendTo commandGateway
     }
 
 }
